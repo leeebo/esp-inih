@@ -60,7 +60,11 @@ void parse(const char* fname) {
     u++;
 }
 
+#ifdef CONFIG_IDF_TARGET
+void app_main(void)
+#else
 int main(void)
+#endif
 {
     parse("no_file.ini");
     parse("normal.ini");
@@ -72,5 +76,7 @@ int main(void)
     parse("bom.ini");
     parse("duplicate_sections.ini");
     parse("no_value.ini");
+#ifndef CONFIG_IDF_TARGET
     return 0;
+#endif
 }
