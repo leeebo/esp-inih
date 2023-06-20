@@ -61,21 +61,63 @@ void parse(const char* fname) {
 }
 
 #ifdef CONFIG_IDF_TARGET
+#include "esp_err.h"
+#include "esp_log.h"
+#include "esp_spiffs.h"
+#define BASE_PATH "/spiffs"
+#define TAG "inih"
+
+void spiffs_init(void) {
+    esp_vfs_spiffs_conf_t conf = {
+        .base_path = BASE_PATH,
+        .partition_label = NULL,
+        .max_files = 5,
+        .format_if_mount_failed = false
+    };
+
+    // Use settings defined above to initialize and mount SPIFFS filesystem.
+    // Note: esp_vfs_spiffs_register is an all-in-one convenience function.
+    esp_err_t ret = esp_vfs_spiffs_register(&conf);
+
+    if (ret != ESP_OK) {
+        if (ret == ESP_FAIL) {
+            ESP_LOGE(TAG, "Failed to mount or format filesystem");
+        } else if (ret == ESP_ERR_NOT_FOUND) {
+            ESP_LOGE(TAG, "Failed to find SPIFFS partition");
+        } else {
+            ESP_LOGE(TAG, "Failed to initialize SPIFFS (%s)", esp_err_to_name(ret));
+        }
+        return;
+    }
+
+    size_t total = 0, used = 0;
+    ret = esp_spiffs_info(NULL, &total, &used);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to get SPIFFS partition information (%s)", esp_err_to_name(ret));
+    } else {
+        ESP_LOGI(TAG, "Partition size: total: %d, used: %d", total, used);
+    }
+}
+
 void app_main(void)
 #else
+#define BASE_PATH
 int main(void)
 #endif
 {
-    parse("no_file.ini");
-    parse("normal.ini");
-    parse("bad_section.ini");
-    parse("bad_comment.ini");
-    parse("user_error.ini");
-    parse("multi_line.ini");
-    parse("bad_multi.ini");
-    parse("bom.ini");
-    parse("duplicate_sections.ini");
-    parse("no_value.ini");
+#ifdef CONFIG_IDF_TARGET
+    spiffs_init();
+#endif
+    parse(BASE_PATH "/" "no_file.ini");
+    parse(BASE_PATH "/" "normal.ini");
+    parse(BASE_PATH "/" "bad_section.ini");
+    parse(BASE_PATH "/" "bad_comment.ini");
+    parse(BASE_PATH "/" "user_error.ini");
+    parse(BASE_PATH "/" "multi_line.ini");
+    parse(BASE_PATH "/" "bad_multi.ini");
+    parse(BASE_PATH "/" "bom.ini");
+    parse(BASE_PATH "/" "duplicate_sections.ini");
+    parse(BASE_PATH "/" "no_value.ini");
 #ifndef CONFIG_IDF_TARGET
     return 0;
 #endif
