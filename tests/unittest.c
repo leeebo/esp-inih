@@ -101,23 +101,24 @@ void spiffs_init(void) {
 
 void app_main(void)
 #else
-#define BASE_PATH "."
+#define FOLDER_PATH
 int main(void)
 #endif
 {
 #ifdef CONFIG_IDF_TARGET
+#define FOLDER_PATH BASE_PATH "/"
     spiffs_init();
 #endif
-    parse(BASE_PATH "/" "no_file.ini");
-    parse(BASE_PATH "/" "normal.ini");
-    parse(BASE_PATH "/" "bad_section.ini");
-    parse(BASE_PATH "/" "bad_comment.ini");
-    parse(BASE_PATH "/" "user_error.ini");
-    parse(BASE_PATH "/" "multi_line.ini");
-    parse(BASE_PATH "/" "bad_multi.ini");
-    parse(BASE_PATH "/" "bom.ini");
-    parse(BASE_PATH "/" "duplicate_sections.ini");
-    parse(BASE_PATH "/" "no_value.ini");
+    parse(FOLDER_PATH "no_file.ini");
+    parse(FOLDER_PATH "normal.ini");
+    parse(FOLDER_PATH "bad_section.ini");
+    parse(FOLDER_PATH "bad_comment.ini");
+    parse(FOLDER_PATH "user_error.ini");
+    parse(FOLDER_PATH "multi_line.ini");
+    parse(FOLDER_PATH "bad_multi.ini");
+    parse(FOLDER_PATH "bom.ini");
+    parse(FOLDER_PATH "duplicate_sections.ini");
+    parse(FOLDER_PATH "no_value.ini");
 #ifndef CONFIG_IDF_TARGET
     return 0;
 #endif
