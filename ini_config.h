@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#ifdef CONFIG_IDF_TARGET
 #include "sdkconfig.h"
 
 /* Nonzero if ini_handler callback should accept lineno parameter. */
@@ -63,3 +64,4 @@
    have the same signatures as malloc/free/realloc and behave in a similar
    way. ini_realloc is only needed if INI_ALLOW_REALLOC is set. */
 #define INI_CUSTOM_ALLOCATOR CONFIG_INI_CUSTOM_ALLOCATOR
+#endif

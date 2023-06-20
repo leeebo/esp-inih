@@ -101,7 +101,7 @@ void spiffs_init(void) {
 
 void app_main(void)
 #else
-#define BASE_PATH
+#define BASE_PATH "."
 int main(void)
 #endif
 {

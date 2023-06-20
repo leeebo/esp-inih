@@ -1,0 +1,8 @@
+version: "0.0.1"
+description: Simple .INI file parser written in C, portting for ESP-IDF
+url: https://github.com/leeebo/esp-inih
+repository: https://github.com/leeebo/esp-inih.git
+documentation: https://github.com/leeebo/esp-inih
+issues: https://github.com/leeebo/esp-inih/issues
+dependencies:
+  idf: ">=4.4"
